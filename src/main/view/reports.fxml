@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.ReportPage">
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+              <Label alignment="CENTER" contentDisplay="TOP" layoutX="562.0" layoutY="15.0" prefHeight="40.0" prefWidth="156.0" text="Reports Page" textAlignment="CENTER">
+                  <font>
+                      <Font size="21.0" />
+                  </font>
+              </Label>
+            <Button fx:id="backButton" layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#backButtonEvent" prefHeight="25.0" prefWidth="55.0" text="Back">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <ComboBox fx:id="monthCombo" layoutX="147.0" layoutY="292.0" prefWidth="150.0" />
+            <ComboBox fx:id="typeCombo" layoutX="147.0" layoutY="352.0" prefWidth="150.0" />
+            <TextField fx:id="customerField" layoutX="151.0" layoutY="440.0" />
+            <Label layoutX="166.0" layoutY="326.0" text="Type of Appointment" />
+            <Label layoutX="161.0" layoutY="263.0" text="Month of Appointment" />
+            <Label layoutX="103.0" layoutY="400.0" text="Total Number of Customer Appointments">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="appointmentButton" layoutX="184.0" layoutY="498.0" mnemonicParsing="false" onAction="#appointmentReport" text="Run Report" />
+            <Label fx:id="reportErrorLabel" layoutX="15.0" layoutY="210.0" prefHeight="30.0" prefWidth="339.0" />
+            <Label layoutX="14.0" layoutY="177.0" text="Total Number of Customer Appointments Report">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="scheduleText" layoutX="443.0" layoutY="391.0" prefHeight="200.0" prefWidth="200.0" />
+            <ComboBox fx:id="scheduleCombo" layoutX="451.0" layoutY="293.0" prefWidth="150.0" />
+            <Label fx:id="scheduleComboLabel" layoutX="453.0" layoutY="263.0" text="Select Contact for Schedule" />
+            <Label fx:id="scheduleComboLabel1" layoutX="489.0" layoutY="343.0" text="Schedule">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Button fx:id="scheduleButton" layoutX="505.0" layoutY="616.0" mnemonicParsing="false" onAction="#scheduleReport" text="Run Report" />
+            <Label layoutX="428.0" layoutY="177.0" text="Contact Schedule Report">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="contactErrorLabel" alignment="CENTER" layoutX="356.0" layoutY="210.0" prefHeight="30.0" prefWidth="339.0" />
+            <Label layoutX="795.0" layoutY="177.0" text="Customer Appointment Location Report">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="locationCombo" layoutX="824.0" layoutY="292.0" prefWidth="150.0" />
+            <Label fx:id="scheduleComboLabel2" layoutX="826.0" layoutY="263.0" text="Select Location for Appointment" />
+            <Label fx:id="locationErrorLabel" alignment="CENTER" layoutX="749.0" layoutY="210.0" prefHeight="30.0" prefWidth="339.0" />
+            <Label layoutX="783.0" layoutY="400.0" text="Total Number of Customer Appointments by Location">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="locationField" layoutX="850.0" layoutY="440.0" />
+            <Button fx:id="locationButton" layoutX="874.0" layoutY="498.0" mnemonicParsing="false" onAction="#locationAppointmentReport" text="Run Report" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
