@@ -51,7 +51,6 @@ public class AddCustomerPage implements Initializable{
 
     /**
      * Initializes and fills the countries and divisions combo with all of the available countries and divisions
-     * Instead of using a for loop I use a lambda to make it a short one liner and to prevent making a new ArrayList and for loop just for filling the combo boxes
      * @param url Needed for initialize function
      * @param resourceBundle Needed for initialize function
      */

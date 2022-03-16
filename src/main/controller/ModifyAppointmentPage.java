@@ -127,8 +127,7 @@ public class ModifyAppointmentPage implements Initializable {
             Timestamp sqlEndTS = Timestamp.valueOf(endUTC.toLocalDateTime());
 
 
-//            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("EST"));
-//            Timestamp ts = new Timestamp(1);
+//
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(sqlStartTS);
             calendar.setTimeZone(TimeZone.getDefault());
@@ -137,36 +136,87 @@ public class ModifyAppointmentPage implements Initializable {
             calendar2.setTime(sqlEndTS);
             calendar2.setTimeZone(TimeZone.getDefault());
 
-            //7,1
 
             Integer contactID = contactCombo.getSelectionModel().getSelectedIndex() + 1;
             System.out.println(contactID);
             ObservableList<Appointments> appointmentList = DBAppointments.getAllAppointments();
+            LocalTime openTime = LocalTime.parse("07:59");
+            openTime.format(DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.of("America/New_York")));
+            LocalTime closeTime = LocalTime.parse("22:01");
+            closeTime.format(DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.of("America/New_York")));
+//            if (!appointmentList.isEmpty()) {
+//                for (Appointments a : appointmentList) {
+//                    if(a.getAppointmentID().equals(appointmentIDField.getText())) {
+//                        continue;
+//                    }
+            Integer count = 0;
+            if (java.util.TimeZone.getDefault().getDisplayName().equals("Central European Standard Time")) {
+                final long duration = 21600000;
+                sqlStartTS.setTime(sqlStartTS.getTime() - duration);
+                sqlEndTS.setTime(sqlEndTS.getTime() - duration);
+                if (sqlStartTS.toLocalDateTime().toLocalTime().isBefore(openTime) || sqlEndTS.toLocalDateTime().toLocalTime().isAfter(closeTime)
+                        || sqlStartTS.toLocalDateTime().toLocalTime().equals(openTime) || sqlEndTS.toLocalDateTime().toLocalTime().equals(closeTime)) {
+                    openTimeLabel.setText("The office is only open from 8am to 10pm EST.");
+                }
+                sqlStartTS.setTime(sqlStartTS.getTime() + duration);
+                sqlEndTS.setTime(sqlEndTS.getTime() + duration);
+            }
+            for (Appointments a : appointmentList) {
+                if(a.getAppointmentID() == Integer.parseInt(appointmentIDField.getText())) {
+                    System.out.println("same appointment conflict");
+                    count++;
+                    if(appointmentList.size() == count){
+                        System.out.println("sqlStart is " + sqlStartTS + " agetStart is " + a.getStartDateTime() + " sqlend is" + sqlEndTS + " agetEnd is " + a.getEndDateTime());
+                        DBAppointments.modifyAppointments(title, description, location, type, sqlStartTS, sqlEndTS, customerID, userID, contactID, appointmentID);
+                        Main m = new Main();
+                        m.changeScene("view/appointments.fxml");
+                        break;
+                    }else continue;
+                }
+                System.out.println("sqlStart is " + sqlStartTS.toLocalDateTime().toLocalTime() + " agetStart is " + a.getStartDateTime().toLocalDateTime().toLocalTime() + " sqlend is" + sqlEndTS.toLocalDateTime().toLocalTime() + " agetEnd is " + a.getEndDateTime().toLocalDateTime().toLocalTime());
+                System.out.println("count is " + count);
+                System.out.println("list size is " + appointmentList.size());
+                System.out.println("sqlStart is " + sqlStartTS.toLocalDateTime().toLocalTime() + " opentime is " + openTime + " sqlend is" + sqlEndTS.toLocalDateTime().toLocalTime() + " closetime is " + closeTime);
 
-            if (!appointmentList.isEmpty()) {
-                for (Appointments a : appointmentList) {
-                    if(a.getAppointmentID().equals(appointmentIDField.getText())) {
-                        continue;
-                    }
-                    if (sqlStartTS.before(a.getStartDateTime()) && sqlEndTS.before(a.getStartDateTime()) || sqlStartTS.after(a.getEndDateTime()) && sqlEndTS.after(a.getEndDateTime())) {
-                            if (sqlStartTS.toLocalDateTime().toLocalTime().isAfter(LocalTime.parse("07:59")) && sqlEndTS.toLocalDateTime().toLocalTime().isBefore(LocalTime.parse("22:01"))) {
-                                if (calendar.get(Calendar.DAY_OF_WEEK) != 7 && calendar.get(Calendar.DAY_OF_WEEK) != 1) {
-                                    if(calendar2.get(Calendar.DAY_OF_WEEK) != 7 && calendar.get(Calendar.DAY_OF_WEEK) != 1) {
-                                        if(sqlStartTS.before(sqlEndTS)) {
-                                            DBAppointments.modifyAppointments(title, description, location, type, sqlStartTS, sqlEndTS, customerID, userID, contactID, appointmentID);
-                                            Main m = new Main();
-                                            m.changeScene("view/appointments.fxml");
-                                            break;
-                                        } else conflictingLabel.setText("Appointment start or end time interferes with another appointment.");
-                                    } else openTimeLabel.setText("The office is not open Saturday or Sunday");
-                                } else openTimeLabel.setText("The office is not open Saturday or Sunday");
-                            } else openTimeLabel.setText("The office is only open from 8am to 10pm");
-                    } else
-                        conflictingLabel.setText("Appointment start or end time interferes with another appointment.");
+                if (calendar.get(Calendar.DAY_OF_WEEK) == 7 || calendar.get(Calendar.DAY_OF_WEEK) == 1) {
+                    openTimeLabel.setText("The office is not open Saturday or Sunday");
+                    continue;
+                }
+                if (calendar2.get(Calendar.DAY_OF_WEEK) == 7 || calendar2.get(Calendar.DAY_OF_WEEK) == 1) {
+                    openTimeLabel.setText("The office is not open Saturday or Sunday");
+                    continue;
+                }
+                if (sqlStartTS.after(sqlEndTS)) {
+                    conflictingLabel.setText("Please choose a start time that is before the end time");
+                    continue;
+                }
+                if (sqlStartTS.equals(a.getStartDateTime()) || sqlEndTS.equals(a.getEndDateTime())
+                        || sqlStartTS.equals(a.getEndDateTime()) || sqlEndTS.equals(a.getStartDateTime())) {
+                    conflictingLabel.setText("Appointment start or end time is the same as another appointment");
+                    continue;
+                }
+                if (sqlStartTS.equals(sqlEndTS)) {
+                    conflictingLabel.setText("Appointment start and end cannot be at the same time");
+                    continue;
+                }
+                if (sqlStartTS.after(a.getStartDateTime()) && sqlEndTS.before(a.getEndDateTime())
+                        || sqlStartTS.before(a.getEndDateTime()) && sqlEndTS.after(a.getEndDateTime())
+                        || sqlStartTS.before(a.getStartDateTime()) && sqlEndTS.after(a.getStartDateTime())) {
+                    conflictingLabel.setText("Appointment start or end time interferes with another appointment");
+                    continue;
+                }
+                if(appointmentList.size() == count){
+                    System.out.println("appointment modified with sqlStart is " + sqlStartTS + " agetStart is " + a.getStartDateTime() + " sqlend is" + sqlEndTS + " agetEnd is " + a.getEndDateTime());
+                    DBAppointments.modifyAppointments(title, description, location, type, sqlStartTS, sqlEndTS, customerID, userID, contactID, appointmentID);
+                    Main m = new Main();
+                    m.changeScene("view/appointments.fxml");
+                    break;
+                } else {
+                    count++;
                 }
             }
         }
-    }
+            }
 
     /**
      * Loads data from the appointment page and passes the selected appointment for modification and autofills the fields with the information

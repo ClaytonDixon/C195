@@ -56,7 +56,7 @@ public class LoginPage implements Initializable {
     }
 
     /**
-     * Checks the loging and verifies the username and password are correct and displays appropriate error in appropriate language if incorrect
+     * Checks the login and verifies the username and password are correct and displays appropriate error in appropriate language if incorrect
      * @param event Handles click event
      * @throws IOException Throws error if fails
      */

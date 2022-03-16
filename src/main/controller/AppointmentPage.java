@@ -1,5 +1,6 @@
 package main.controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,7 +28,9 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * Controller class for the main appointment page
@@ -79,13 +82,14 @@ public class AppointmentPage implements Initializable {
     private Scene scene;
     private Parent root;
     private Stage stage;
-    private LocalTime timeNow;
+
 
     ToggleGroup group = new ToggleGroup();
 
 
     /**
      * Initializes and fills the table view with all of the appointments
+     * Changes Line 119 from Line 128 to line 130 and 131 using 2 different lambdas
      * @param url Needed for initialize function
      * @param resourceBundle Needed for initialize function
      */
@@ -108,67 +112,69 @@ public class AppointmentPage implements Initializable {
         weekRadio.setToggleGroup(group);
         monthRadio.setToggleGroup(group);
 
-        timeNow = LocalTime.now();
+
 
         Timestamp ts = Timestamp.from(Instant.now());
 
-        ObservableList<Appointments> user1List = DBAppointments.getAllAppointments();
-        user1List.clear();
-        ArrayList<Timestamp> timestamps = new ArrayList<>();
-        for(Appointments a : appointmentList) {
+//        ObservableList<Appointments> user1List = DBAppointments.getAllAppointments();
+//        user1List.clear();
+//        ArrayList<Timestamp> timestamps = new ArrayList<>();
+//        for(Appointments a : appointmentList) {
+//
+//            if(a.getUserID()==1) {
+//                user1List.add(a);
+//                timestamps.add(a.getStartDateTime());
+//            }
+//        }
 
-            if(a.getUserID()==1) {
-                user1List.add(a);
-                timestamps.add(a.getStartDateTime());
-            }
-        }
-//        System.out.println(user1List);
-//        System.out.println("Time stamps are " + timestamps);
+        ObservableList<Appointments> user1List = FXCollections.observableList(appointmentList.stream().filter(a -> a.getUserID() == 1).collect(Collectors.toList()));
+        List<Timestamp> timestamps = appointmentList.stream().filter(a -> a.getUserID() == 1).map(a -> a.getStartDateTime()).collect(Collectors.toList());
 
 
-        int i = 0;
-        if(!user1List.isEmpty()) {
-            for(Timestamp t: timestamps) {
-                long diff = Math.abs(ChronoUnit.MINUTES.between(ts.toLocalDateTime(), t.toLocalDateTime()));
-                int listSize = timestamps.size();
-                i++;
-                    if(i < listSize){
-                        if (diff <= 15) {
-                            Stage window = new Stage();
-                            window.initModality(Modality.APPLICATION_MODAL);
-                            window.setMinWidth(250);
-                            String str = "Appointment with ID of " + user1List.get(timestamps.indexOf(t)).getAppointmentID() + " is starting in 15 minutes or less with start date and time of " + user1List.get(timestamps.indexOf(t)).getStartDateTime();
-                            Label label = new Label();
-                            label.setText(str);
-                            Button closeButton = new Button("Close the window");
-                            closeButton.setOnAction(e -> window.close());
-                            VBox layout = new VBox(10);
-                            layout.getChildren().addAll(label, closeButton);
-                            layout.setAlignment(Pos.CENTER);
-                            Scene scene = new Scene(layout);
-                            window.setScene(scene);
-                            window.showAndWait();
-                            break;
-                        }
 
-                    } else if(listSize == i){
-                        Stage window = new Stage();
-                        window.initModality(Modality.APPLICATION_MODAL);
-                        window.setMinWidth(250);
-                        Label label = new Label();
-                        label.setText("There are no appointments within 15 minutes");
-                        Button closeButton = new Button("Close the window");
-                        closeButton.setOnAction(e -> window.close());
-                        VBox layout = new VBox(10);
-                        layout.getChildren().addAll(label, closeButton);
-                        layout.setAlignment(Pos.CENTER);
-                        Scene scene = new Scene(layout);
-                        window.setScene(scene);
-                        window.showAndWait();
-                    }
-            }
-
-                }
+//        int i = 0;
+//        if(!user1List.isEmpty()) {
+//            for(Timestamp t: timestamps) {
+//                long diff = Math.abs(ChronoUnit.MINUTES.between(ts.toLocalDateTime(), t.toLocalDateTime()));
+//                int listSize = timestamps.size();
+//                i++;
+//                    if(i < listSize){
+//                        if (diff <= 15) {
+//                            Stage window = new Stage();
+//                            window.initModality(Modality.APPLICATION_MODAL);
+//                            window.setMinWidth(250);
+//                            String str = "Appointment with ID of " + user1List.get(timestamps.indexOf(t)).getAppointmentID() + " is starting in 15 minutes or less with start date and time of " + user1List.get(timestamps.indexOf(t)).getStartDateTime();
+//                            Label label = new Label();
+//                            label.setText(str);
+//                            Button closeButton = new Button("Close the window");
+//                            closeButton.setOnAction(e -> window.close());
+//                            VBox layout = new VBox(10);
+//                            layout.getChildren().addAll(label, closeButton);
+//                            layout.setAlignment(Pos.CENTER);
+//                            Scene scene = new Scene(layout);
+//                            window.setScene(scene);
+//                            window.showAndWait();
+//                            break;
+//                        }
+//
+//                    } else if(listSize == i){
+//                        Stage window = new Stage();
+//                        window.initModality(Modality.APPLICATION_MODAL);
+//                        window.setMinWidth(250);
+//                        Label label = new Label();
+//                        label.setText("There are no appointments within 15 minutes");
+//                        Button closeButton = new Button("Close the window");
+//                        closeButton.setOnAction(e -> window.close());
+//                        VBox layout = new VBox(10);
+//                        layout.getChildren().addAll(label, closeButton);
+//                        layout.setAlignment(Pos.CENTER);
+//                        Scene scene = new Scene(layout);
+//                        window.setScene(scene);
+//                        window.showAndWait();
+//                    }
+//            }
+//
+//                }
             }
 
     /**

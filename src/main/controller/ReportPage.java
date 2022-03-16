@@ -2,7 +2,6 @@ package main.controller;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -14,8 +13,6 @@ import main.model.Contacts;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Array;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -111,7 +108,7 @@ public class ReportPage implements Initializable {
                         String textOutput = "Appointment ID: " + appointmentID + System.lineSeparator() + "Title: " + title + System.lineSeparator() + "Description: " + description + System.lineSeparator() + "Location: " + location + System.lineSeparator() +
                                 "Type: " + type + System.lineSeparator() + "Start DateTime: " + startDateTime + System.lineSeparator() + "End DateTime: " + endDateTime + System.lineSeparator() + "Customer ID: " + customerID + System.lineSeparator() +
                                 "User ID: " + userID + System.lineSeparator() + "Contact ID: " + contactID + System.lineSeparator() + System.lineSeparator() + System.lineSeparator() + System.lineSeparator();
-                        scheduleText.setText(textOutput);
+                        scheduleText.appendText(textOutput);
 //
                     }
                 }
@@ -157,7 +154,7 @@ public class ReportPage implements Initializable {
                         String textOutput = "Appointment ID: " + appointmentID + System.lineSeparator() + "Title: " + title + System.lineSeparator() + "Description: " + description + System.lineSeparator() + "Location: " + location + System.lineSeparator() +
                                 "Type: " + type + System.lineSeparator() + "Start DateTime: " + startDateTime + System.lineSeparator() + "End DateTime: " + endDateTime + System.lineSeparator() + "Customer ID: " + customerID + System.lineSeparator() +
                                 "User ID: " + userID + System.lineSeparator() + "Contact ID: " + contactID + System.lineSeparator() + System.lineSeparator() + System.lineSeparator() + System.lineSeparator();
-                        scheduleText.setText(textOutput);
+                        scheduleText.appendText(textOutput);
 //
                     }
                 }
@@ -337,6 +334,12 @@ public class ReportPage implements Initializable {
         }
     }
 
+    /**
+     * Initializes the date into the month combo, schedule combo, location combo, and type combo
+     * @param resourceBundle Required for initialize
+     * @param url Required for initialize
+     */
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<Appointments> appointmentList = DBAppointments.getAllAppointments();
@@ -353,9 +356,10 @@ public class ReportPage implements Initializable {
 //            clist.add(c.getContactName());
 //        }
 
-        List<String> locationList = appointmentList.stream().map(Appointments::getLocation).distinct().collect(Collectors.toList());
+        List<String> locationList = appointmentList.stream().map(Appointments -> Appointments.getLocation()).distinct().collect(Collectors.toList());
+//        List<String> locationList = appointmentList.stream().map(Appointments::getLocation).distinct().collect(Collectors.toList());
         List<String> clist = contactList.stream().map(Contacts::getContactName).collect(Collectors.toList());
-        List<String> alist = appointmentList.stream().map(Appointments::getType).distinct().collect(Collectors.toList());
+        List<String> alist = appointmentList.stream().map(Appointments::getType).distinct().sorted().collect(Collectors.toList());
         System.out.println(locationList);
 
         scheduleCombo.getItems().addAll(clist);

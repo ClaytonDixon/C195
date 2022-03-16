@@ -60,6 +60,42 @@ public class ModifyCustomerPage implements Initializable {
         m.changeScene("view/customers.fxml");
     }
 
+    public void stateComboAction() throws IOException {
+
+
+        String country = countryCombo.getSelectionModel().getSelectedItem().toString();
+        System.out.println(country);
+        ObservableList<Divisions> divisionsList = DBFirstLevelDivisions.getAllDivisions();
+
+        ArrayList<String> dlist = new ArrayList<>();
+
+        if (country.equals("U.S")) {
+            for (Divisions d : divisionsList) {
+                if (d.getCountryID() == 1) {
+                    dlist.add(d.getDivision());
+                }
+                stateCombo.getItems().clear();
+                stateCombo.getItems().addAll(dlist);
+            }
+        } else if (country.equals("UK")) {
+            for (Divisions d : divisionsList) {
+                if (d.getCountryID() == 2) {
+                    dlist.add(d.getDivision());
+                }
+                stateCombo.getItems().clear();
+                stateCombo.getItems().addAll(dlist);
+            }
+        } else if (country.equals("Canada")) {
+            for (Divisions d : divisionsList) {
+                if (d.getCountryID() == 3) {
+                    dlist.add(d.getDivision());
+                }
+                stateCombo.getItems().clear();
+                stateCombo.getItems().addAll(dlist);
+            }
+        }
+    }
+
     /**
      * Takes all the information in the fields and runs a function that modifies the selected customer
      * @param event Handles the click event for the modify customer button in the form
@@ -147,7 +183,51 @@ public class ModifyCustomerPage implements Initializable {
         }
 
         stateCombo.getSelectionModel().select(translateDivisionName(divID));
+        System.out.println(stateCombo.getSelectionModel().getSelectedItem());
+        String selectedState = (String) stateCombo.getSelectionModel().getSelectedItem();
+        System.out.println(selectedState);
+
+        String country = countryCombo.getSelectionModel().getSelectedItem().toString();
+        ObservableList<Divisions> divisionsList2 = DBFirstLevelDivisions.getAllDivisions();
+
+        ArrayList<String> divlist = new ArrayList<>();
+
+        if (country.equals("U.S")) {
+            for (Divisions d : divisionsList2) {
+                if (d.getCountryID() == 1) {
+                    divlist.add(d.getDivision());
+                }
+                stateCombo.getItems().clear();
+                stateCombo.getItems().addAll(divlist);
+                stateCombo.getSelectionModel().select(selectedState);
+
+            }
+        } else if (country.equals("UK")) {
+            for (Divisions d : divisionsList2) {
+                if (d.getCountryID() == 2) {
+                    divlist.add(d.getDivision());
+                }
+                stateCombo.getItems().clear();
+                stateCombo.getItems().addAll(divlist);
+                stateCombo.getSelectionModel().select(selectedState);
+
+            }
+        } else if (country.equals("Canada")) {
+            for (Divisions d : divisionsList2) {
+                if (d.getCountryID() == 3) {
+                    divlist.add(d.getDivision());
+                }
+                stateCombo.getItems().clear();
+                stateCombo.getItems().addAll(divlist);
+                stateCombo.getSelectionModel().select(selectedState);
+
+            }
+            stateCombo.getSelectionModel().select(selectedState);
+        }
+        stateCombo.getSelectionModel().select(selectedState);
         return updateCustomer;
+
+
     }
 
     /**
@@ -174,6 +254,7 @@ public class ModifyCustomerPage implements Initializable {
 //        }
         List<String> dlist = divisionsList.stream().map(Divisions::getDivision).collect(Collectors.toList());
         stateCombo.getItems().addAll(dlist);
-        System.out.println(dlist);
-    }
+
+
+}
 }

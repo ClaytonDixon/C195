@@ -105,6 +105,7 @@ public class DBCustomers {
      * @param postalCode Customer's postal code
      * @param phone Customer's phone number
      * @param divisionID Customer's division ID
+     * @param customerID Customer's ID
      */
     public static void modifyCustomer(String customerName, String address, String postalCode, String phone, Integer divisionID, int customerID) {
 

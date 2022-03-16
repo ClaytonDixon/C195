@@ -20,7 +20,8 @@ If you click back you go back to the main page. If you click on a customer in th
 "Delete Customer" button it deletes the customer. If you click "Add Customer" button it takes you to the
 form to add a customer. Fill out the information and pick the correct items from the drop down and click the 
 "Add Customer" button in the form. If you want to modify a customer you can click to select a customer in the table
-and click the "Modify Customer" button. The form should be auto-filled with the information. Just change the info
+and click the "Modify Customer" button. The form should be auto-filled with the information. IF YOU WANT THE STATES
+FILTERED YOU HAVE TO SELECT THE COUNTRY. Just change the info
 that you want changed then click the "Modify Customer" button. This takes you back to the customer page.
 To go back to the main page click the "Back" button in the top right. Clicking on the "Appointment Page"
 button takes you to the appointment page. This displays all the appointments. If you click on the Month radio button it will 
